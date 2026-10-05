@@ -23,9 +23,9 @@ class MainActivity : ComponentActivity() {
                 var tab by remember { mutableIntStateOf(0) }
                 Scaffold(bottomBar = {
                     NavigationBar {
-                        NavigationBarItem(tab == 0, { tab = 0 }, { Text("Refunds") }, icon = { Icon(Icons.Default.History, null) })
-                        NavigationBarItem(tab == 1, { tab = 1 }, { Text("Manager") }, icon = { Icon(Icons.Default.Dashboard, null) })
-                        NavigationBarItem(tab == 2, { tab = 2 }, { Text("Reset") }, icon = { Icon(Icons.Default.LockReset, null) })
+                        NavigationBarItem(tab == 0, { tab = 0 }, icon = { Icon(Icons.Default.History, null) }, label = { Text("Refunds") })
+                        NavigationBarItem(tab == 1, { tab = 1 }, icon = { Icon(Icons.Default.Dashboard, null) }, label = { Text("Manager") })
+                        NavigationBarItem(tab == 2, { tab = 2 }, icon = { Icon(Icons.Default.LockReset, null) }, label = { Text("Reset") })
                     }
                 }) { p ->
                     when (tab) {
