@@ -2,6 +2,7 @@ name: build-apk
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
 jobs:
   build:
@@ -12,8 +13,23 @@ jobs:
         with: { distribution: temurin, java-version: 17 }
       - uses: gradle/actions/setup-gradle@v3
       - run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          ls $ANDROID_HOME/platform-tools || true
-          gradle :app:assembleDebug --stacktrace
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+            echo "KEYSTORE_FILE=$PWD/release.keystore" >> $GITHUB_ENV
+            echo "STORE_PASSWORD=${{ secrets.STORE_PASSWORD }}" >> $GITHUB_ENV
+            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+            echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          else
+            echo "No signing secrets - release will be unsigned"
+          fi
+      - run: gradle :app:assembleDebug :app:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
         with: { name: ToolsApp-debug, path: app/build/outputs/apk/debug/*.apk }
+      - uses: actions/upload-artifact@v4
+        with: { name: ToolsApp-release, path: app/build/outputs/apk/release/*.apk }
+      - if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/release/*.apk
