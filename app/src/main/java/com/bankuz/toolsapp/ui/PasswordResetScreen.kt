@@ -22,11 +22,11 @@ fun PasswordResetScreen(mod: Modifier = Modifier) {
     Column(mod.padding(16.dp).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("Password Reset — Vanraj / JPPACC", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(portal == "vanraj", { portal = "vanraj" }, { Text("Vanraj") })
-            FilterChip(portal == "jppacc", { portal = "jppacc" }, { Text("JPPACC") })
+            FilterChip(portal == "vanraj", { portal = "vanraj" }, label = { Text("Vanraj") })
+            FilterChip(portal == "jppacc", { portal = "jppacc" }, label = { Text("JPPACC") })
         }
-        OutlinedTextField(email, { email = it }, { Text("Email") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(pass, { pass = it }, { Text("New password (min 6)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(email, { email = it }, label = { Text("Email") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(pass, { pass = it }, label = { Text("New password (min 6)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         Button({
             busy = true; msg = ""
             scope.launch {
@@ -40,7 +40,7 @@ fun PasswordResetScreen(mod: Modifier = Modifier) {
         }, enabled = !busy && email.isNotBlank() && pass.length >= 6, modifier = Modifier.fillMaxWidth()) {
             Text(if (busy) "..." else "One-Click Reset")
         }
-        OutlinedTextField(token, { token = it }, { Text("Token (advanced)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(token, { token = it }, label = { Text("Token (advanced)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         if (msg.isNotEmpty()) Text(msg, color = if (ok) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error)
     }
 }

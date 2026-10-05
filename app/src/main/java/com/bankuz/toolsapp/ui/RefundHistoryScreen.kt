@@ -27,8 +27,8 @@ fun RefundHistoryScreen(mod: Modifier = Modifier) {
     var upi by remember { mutableStateOf("") }
 
     Column(mod.padding(12.dp).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedTextField(kid, { kid = it }, { Text("Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(sec, { sec = it }, { Text("Key Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(kid, { kid = it }, label = { Text("Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(sec, { sec = it }, label = { Text("Key Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         Button({ Prefs.set(ctx, "rr_kid", kid); Prefs.set(ctx, "rr_sec", sec)
             loading = true; err = ""
             scope.launch {
@@ -38,7 +38,7 @@ fun RefundHistoryScreen(mod: Modifier = Modifier) {
             }
         }, enabled = !loading) { Text(if (loading) "Loading..." else "Fetch (${list.size})") }
         if (err.isNotEmpty()) Text(err, color = MaterialTheme.colorScheme.error)
-        OutlinedTextField(q, { q = it }, { Text("Search id / email / contact") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(q, { q = it }, label = { Text("Search id / email / contact") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         val total = remember(list) { list.sumOf { it.amount } }
         Text("Total ₹$total · ${list.size} refunds", style = MaterialTheme.typography.titleSmall)
         LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f)) {
@@ -61,8 +61,8 @@ fun RefundHistoryScreen(mod: Modifier = Modifier) {
         }, title = { Text("Paytm-style Receipt") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("₹${r.amount} SUCCESS", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
-                OutlinedTextField(rname, { rname = it }, { Text("Receiver Name") })
-                OutlinedTextField(upi, { upi = it }, { Text("UPI ID") })
+                OutlinedTextField(rname, { rname = it }, label = { Text("Receiver Name") })
+                OutlinedTextField(upi, { upi = it }, label = { Text("UPI ID") })
                 Text("Name: $rname\nUPI: $upi\nTxn: ${r.id}\nStatus: ${r.status}")
             }
         })

@@ -33,10 +33,10 @@ fun ManagerScreen(mod: Modifier = Modifier) {
     }
     Column(mod.padding(12.dp).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("UG / PG keys (TAX optional — same fields reuse)", style = MaterialTheme.typography.titleSmall)
-        OutlinedTextField(ugId, { ugId = it }, { Text("UG Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(ugSec, { ugSec = it }, { Text("UG Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(pgId, { pgId = it }, { Text("PG Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(pgSec, { pgSec = it }, { Text("PG Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(ugId, { ugId = it }, label = { Text("UG Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(ugSec, { ugSec = it }, label = { Text("UG Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(pgId, { pgId = it }, label = { Text("PG Key ID") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(pgSec, { pgSec = it }, label = { Text("PG Secret") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button({ save(); busy = true; msg = ""
                 scope.launch {
@@ -50,8 +50,8 @@ fun ManagerScreen(mod: Modifier = Modifier) {
             }, enabled = !busy) { Text("Load") }
         }
         if (msg.isNotEmpty()) Text(msg, style = MaterialTheme.typography.bodySmall)
-        OutlinedTextField(pid, { pid = it }, { Text("Payment ID for refund (pay_...)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(amt, { amt = it }, { Text("Amount ₹ (blank = full)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(pid, { pid = it }, label = { Text("Payment ID for refund (pay_...)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(amt, { amt = it }, label = { Text("Amount ₹ (blank = full)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
         Button({
             busy = true
             scope.launch {

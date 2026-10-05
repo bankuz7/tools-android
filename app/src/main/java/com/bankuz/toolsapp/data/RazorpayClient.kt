@@ -3,8 +3,10 @@ package com.bankuz.toolsapp.data
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Credentials
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
@@ -104,7 +106,7 @@ object RazorpayClient {
             if (amountRs.isNotBlank()) body.put("amount", (amountRs.toDouble() * 100).toInt())
             val req = Request.Builder().url("https://api.razorpay.com/v1/payments/$paymentId/refund")
                 .header("Authorization", Credentials.basic(kid, sec))
-                .post(okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), body.toString())).build()
+                .post(body.toString().toRequestBody("application/json".toMediaType())).build()
             http.newCall(req).execute().use { "${it.code}: ${it.body?.string()?.take(300)}" }
         }
 }
