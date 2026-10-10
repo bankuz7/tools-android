@@ -109,4 +109,26 @@ object RazorpayClient {
                 .post(body.toString().toRequestBody("application/json".toMediaType())).build()
             http.newCall(req).execute().use { "${it.code}: ${it.body?.string()?.take(300)}" }
         }
+
+    data class PayLink(val id: String, val shortUrl: String, val amount: Double, val status: String, val desc: String)
+
+    suspend fun fetchLinks(kid: String, sec: String): List<PayLink> = try {
+        val items = get("/payment_links?count=50", kid, sec).optJSONArray("payment_links")
+            ?: return emptyList()
+        (0 until items.length()).map {
+            val p = items.getJSONObject(it)
+            PayLink(p.optString("id"), p.optString("short_url"),
+                p.optLong("amount") / 100.0, p.optString("status"), p.optString("description"))
+        }
+    } catch (_: Exception) { emptyList() }
+
+    suspend fun createLink(kid: String, sec: String, amountRs: Double, desc: String): String =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().put("amount", (amountRs * 100).toInt())
+                .put("currency", "INR").put("description", desc.ifBlank { "Payment" })
+            val req = Request.Builder().url("https://api.razorpay.com/v1/payment_links")
+                .header("Authorization", Credentials.basic(kid, sec))
+                .post(body.toString().toRequestBody("application/json".toMediaType())).build()
+            http.newCall(req).execute().use { "${it.code}: ${it.body?.string()?.take(300)}" }
+        }
 }
